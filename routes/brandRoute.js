@@ -13,14 +13,10 @@ const {
   deleteBrand,
 } = require("../controllers/brandController");
 
-
 const router = express.Router();
 
 // Get All Brands
-router
-  .route("/")
-  .get(getBrands)
-  .post(createBrandValidator, createBrand);
+router.route("/").get(getBrands).post(createBrandValidator, createBrand);
 router
   .route("/:id")
   .get(getBrandValidator, getBrand)

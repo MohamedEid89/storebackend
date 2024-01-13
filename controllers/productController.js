@@ -2,20 +2,20 @@ const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
 const Product = require("../models/productModel");
 const ApiError = require("../utils/apiError");
-//const mongoose = require("mongoose");
+
 
 // @desc Get All Products
 // @route GET /api/v1/products
 // @access Plublic
 exports.getProducts = asyncHandler(async (req, res) => {
   // Filtering
-  const queryStringObj = { ...req.query };
-  const excludesFields = ['page', 'sort', 'limit', 'fields'];
-  excludesFields.forEach((field) => delete queryStringObj[field]);
+  // const queryStringObj = { ...req.query };
+  // const excludesFields = ['page', 'sort', 'keyword','limit', 'fields'];
+  // excludesFields.forEach((field) => delete queryStringObj[field]);
 
-  // Apply filteration using [gte,gt,lte,lt]
-  let queryStr = JSON.stringify(queryStringObj);
-  queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+  // // Apply filteration using [gte,gt,lte,lt]
+  // let queryStr = JSON.stringify(queryStringObj);
+  // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
   // Pagenation
   const page = req.query.page * 1 || 1;
@@ -51,16 +51,17 @@ if(req.query.fields){
   const query = {};
   query.$or = [
      {title: {$regex: req.query.keyword, $options: 'i'}},
-     {description: {$regex: req.query.keyword, $options: 'i'}},
+     {description: {$regex: req.query.keyword, $options: 'i'}}
   ];
-  mongooseQuery = mongooseQuery.find(query);
+  mongooseQuery =  mongooseQuery.find(query);
+  
  }
 
 
 // Execute query
-  const products = await mongooseQuery;
-
+  const products =  await mongooseQuery;
   res.status(200).json({ results: products.length, page, data: products });
+
 });
 
 // @desc Get specific Product
